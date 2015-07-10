@@ -1,7 +1,5 @@
 package sodium;
 
-import java.util.Optional;
-
 public class MemoryTest1
 {
     public static void main(String[] args)
@@ -24,8 +22,8 @@ public class MemoryTest1
         StreamSink<Integer> et = new StreamSink<Integer>();
         Cell<Integer> t = et.hold(0);
         Stream<Integer> etens = et.map(x -> x/10);
-        Stream<Integer> changeTens = Stream.filterOptional(et.snapshot(t, (neu, old) ->
-            neu.equals(old) ? Optional.empty() : Optional.of(neu)));
+        Stream<Integer> changeTens = et.snapshot(t, (neu, old) ->
+            neu.equals(old) ? null : neu).filterNotNull();
         Cell<Cell<Tuple2<Integer,Integer>>> oout =
             changeTens.map(tens -> t.map(tt -> new Tuple2<Integer,Integer>(tens, tt))).
             hold(t.map(tt -> new Tuple2<Integer,Integer>(0, tt)));
